@@ -1,0 +1,71 @@
+﻿@page "/generateprompt"
+@using WritingPrompter.Shared
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+<h1>Select a Genre</h1>
+
+<div class="row p-3">
+    @if (prompts == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        @foreach (var genere in generes)
+        {
+            <input type="button" class="btn btn-primary m-1" value="@genere.Replace("-", "/")" @onclick="()=>ListPrompts(genere)" />
+        }
+        <input type="button" class="btn btn-primary m-1" value="Random" @onclick="()=>ListPrompts()" />
+
+
+    }
+</div>
+
+<div class="row">
+    <div class="mx-auto">
+        <div class="jumbotron">
+            @prompt
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="mx-auto">
+        <input type="button" class="btn btn-info" value="Copy!" @onclick="CopyTextToClipboard" />
+    </div>
+</div>
+
+
+
+
+@code {
+    private WritingPrompt[] prompts;
+    private IEnumerable<string> generes;
+    string prompt { get; set; } = "...";
+
+    protected override async Task OnInitializedAsync()
+    {
+        prompts = await Http.GetFromJsonAsync<WritingPrompt[]>("WritingPrompt");
+
+        generes = prompts.Select(x => x.Genre).Distinct();
+    }
+
+    public void ListPrompts(string genere = "")
+    {
+        if (string.IsNullOrEmpty(genere))
+        {
+            prompt = prompts[new Random().Next(prompts.Length)].Prompt;
+        }
+        else
+        {
+            List<WritingPrompt> selectedGenre = prompts.Where(x => x.Genre == genere).ToList();
+
+            prompt = selectedGenre[new Random().Next(selectedGenre.Count)].Prompt;
+        }
+    }
+
+    private async Task CopyTextToClipboard()
+    {
+        await JSRuntime.InvokeVoidAsync("clipboardCopy.copyText", prompt);
+    }
+}
