@@ -1,12 +1,38 @@
 ﻿@page "/"
-
-
+@using WritingPrompter.Shared
+@inject HttpClient Http
 
 <div class="row">
     <div class="mx-auto">
         <h1>Hello, writer!</h1>
-
-        Welcome to the prompt generator!
-        <img src="images/books.png" />
     </div>
 </div>
+
+<div class="row">
+    <div class="mx-auto">
+        <div class="mx-auto text-center">
+            Welcome to the writing prompt generator.<br />
+            Total Prompts: @totalPrompts
+        </div>
+
+        <div>
+            <img src="images/books.png" />
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="mx-auto">
+        <a href="/generateprompt" class="btn btn-info">Get Started</a>
+    </div>
+</div>
+
+
+@code {
+    private int totalPrompts { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        totalPrompts = (await Http.GetFromJsonAsync<WritingPrompt[]>("WritingPrompt")).Length;
+
+    }
+}
