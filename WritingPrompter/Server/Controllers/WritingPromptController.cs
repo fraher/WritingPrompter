@@ -26,8 +26,9 @@ namespace WritingPrompter.Server.Controllers
         public IEnumerable<WritingPrompt> Get()
         {
 
-            var fs = new FileStream(@".\Content\prompts.json",
+            var fs = new FileStream(@"./Content/prompts.json",
                                   FileMode.Open);
+
 
             using StreamReader reader = new StreamReader(fs);
             

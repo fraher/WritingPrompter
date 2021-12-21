@@ -338,3 +338,5 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/WritingPrompter/Server/Properties/ServiceDependencies/WritingPrompterServer20211220210228 - Web Deploy/profile.arm.json
+/WritingPrompter/Server/Properties/ServiceDependencies/WritingPrompter - Web Deploy/profile.arm.json
